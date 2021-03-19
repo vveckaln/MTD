@@ -518,6 +518,7 @@ void TrackExtenderWithMTDT<TrackCollection>::fillValueMap(edm::Event& iEvent,
 template <class TrackCollection>
 void TrackExtenderWithMTDT<TrackCollection>::produce(edm::Event& ev, const edm::EventSetup& es) {
   //this produces pieces of the track extra
+  printf("producing \n");
   Traj2TrackHits t2t;
 
   theTransformer->setServices(es);
@@ -677,6 +678,7 @@ void TrackExtenderWithMTDT<TrackCollection>::produce(edm::Event& ev, const edm::
     for (const auto& trj : trajwithmtd) {
       const auto& thetrj = (updateTraj_ ? trj : trajs.front());
       float pathLength = 0.f, tmtd = 0.f, sigmatmtd = -1.f;
+      //!!!!!
       reco::Track result = buildTrack(track,
                                       thetrj,
                                       trj,
@@ -958,6 +960,7 @@ reco::Track TrackExtenderWithMTDT<TrackCollection>::buildTrack(const reco::Track
                                                                float& pathLengthOut,
                                                                float& tmtdOut,
                                                                float& sigmatmtdOut) const {
+  printf("building track\n");
   TrajectoryStateClosestToBeamLine tscbl;
   bool tsbcl_status = getTrajectoryStateClosestToBeamLine(traj, bs, thePropagator, tscbl);
 
@@ -994,6 +997,7 @@ reco::Track TrackExtenderWithMTDT<TrackCollection>::buildTrack(const reco::Track
       if (ismtd) {
         const MTDTrackingRecHit* mtdhit = static_cast<const MTDTrackingRecHit*>(hit.recHit()->hit());
         thit = mtdhit->time();
+	printf("error %f\n", mtdhit -> timeError());
         thiterror = mtdhit->timeError();
         validmtd = true;
         break;
